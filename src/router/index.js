@@ -1,25 +1,40 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '../views/Home.vue'
+//import Home from '../views/Home.vue'
+
+import hotelRouter from '../modules/hotel/router'
+import isAuthenticatedGuard from '../modules/hotel/router/auth-guard'
+
+
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: () => import(/* webpackChunkName: "home" */ '@/modules/hotel/layouts/HomeLayout.vue')
+
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+    path: '/login',
+    ...hotelRouter
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import(/* webpackChunkName: "register" */ '@/modules/hotel/layouts/RegisterLayout.vue')
+
+  },
+  {
+    path: '/roomSelect',
+    name: 'roomSelect',
+    component: () => import(/* webpackChunkName: "RoomSelect" */ '@/modules/hotel/layouts/RoomSelectLayout.vue'),
+    beforeEnter: [ isAuthenticatedGuard ], //implementado para dejar pasar al room select
+  },
+
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
 })
 
 export default router
